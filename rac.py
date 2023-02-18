@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import lib
-import requests as rq
+
 from requests.exceptions import ConnectionError
 from json.decoder import JSONDecodeError
 
@@ -8,30 +8,15 @@ __version__ = '0.1.0'
 
 argparser = lib.ArgumentParser(__version__)
 ui = lib.UI()
-
 endpoint = f'http{argparser.is_https}://{argparser.args.url}'
-try:
-    print(f'[ {argparser.method.upper()} ]', endpoint)
-    res = rq.get(endpoint) if argparser.method == 'get' else rq.post(
-        endpoint, data=argparser.data
-    )
-    if res.status_code == 200:
-        print(ui.ok + '[+] Connected.' + ui.e)
-        print(res.json())
-        print(f'{ui.ok}[+] JSON Data Found.{ui.e}')
-    elif res.status_code == 201:
-        print(ui.ok + '[+] Posted!' + ui.e)
-    elif res.status_code == 400:
-        print(f'{ui.f}[-] 400 Client error.{ui.e}')
-    elif res.status_code == 404:
-        print(f'{ui.f}[-] 404 Not found.{ui.e}')
-    elif res.status_code == 405:
-        print(f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}')
-    elif res.status_code == 415:
-        print(f'{ui.f}[-] 415 Unsupported format.{ui.e}')
-except ConnectionError:
-    print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
-except JSONDecodeError:
-    print(res.text)
-    print(
-        f'{ui.w}[!] Unable to decode to JSON, Printed the raw response.{ui.e}')
+rq = lib.Request(endpoint, argparser)
+
+
+if __name__ == '__main__':
+    try:
+        rq.request()
+    except ConnectionError:
+        print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
+    except JSONDecodeError:
+        print(rq.res.text)
+        print(f'{ui.w}[!] JSON Decode failed, raw response printed.{ui.e}')

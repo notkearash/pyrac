@@ -1,5 +1,6 @@
-import argparse
 import json
+import argparse
+import requests
 
 
 class UI:
@@ -56,3 +57,31 @@ class ArgumentParser:
             open(args.data_file, 'r').read())
     except:
         data = None
+
+
+class Request:
+
+    def __init__(self, endpoint, argparser) -> None:
+        self.endpoint = endpoint
+        self.argparser = argparser
+
+    def request(self):
+        print(f'[ {self.argparser.method.upper()} ]', self.endpoint)
+        self.res = requests.get(self.endpoint) if self.argparser.method == 'get' else requests.post(
+            self.endpoint, data=self.argparser.data
+        )
+        if self.res.status_code == 200:
+            print(ui.ok + '[+] Connected.' + ui.e)
+            print(self.res.json())
+            print(f'{ui.ok}[+] JSON Data Found.{ui.e}')
+        elif self.res.status_code == 201:
+            print(ui.ok + '[+] Posted!' + ui.e)
+        elif self.res.status_code == 400:
+            print(f'{ui.f}[-] 400 Client error.{ui.e}')
+        elif self.res.status_code == 404:
+            print(f'{ui.f}[-] 404 Not found.{ui.e}')
+        elif self.res.status_code == 405:
+            print(
+                f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}')
+        elif self.res.status_code == 415:
+            print(f'{ui.f}[-] 415 Unsupported format.{ui.e}')
