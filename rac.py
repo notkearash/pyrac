@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import lib
-
-from requests import get, post
+import requests as rq
 from requests.exceptions import ConnectionError
 from json.decoder import JSONDecodeError
 
@@ -10,10 +9,12 @@ __version__ = '0.1.0'
 argparser = lib.ArgumentParser(__version__)
 ui = lib.UI()
 
-endpoint = f'http{argparser.is_https}://{argparser.args.url}:{argparser.args.port}'
+endpoint = f'http{argparser.is_https}://{argparser.args.url}'
 try:
     print(f'[ {argparser.method.upper()} ]', endpoint)
-    res = get(endpoint) if argparser.method == 'get' else post(endpoint)
+    res = rq.get(endpoint) if argparser.method == 'get' else rq.post(
+        endpoint, data=argparser.data
+    )
     if res.status_code == 200:
         print(ui.ok + '[+] Connected.' + ui.e)
         print(res.json())
