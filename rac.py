@@ -19,8 +19,16 @@ try:
         print(ui.ok + '[+] Connected.' + ui.e)
         print(res.json())
         print(f'{ui.ok}[+] JSON Data Found.{ui.e}')
+    elif res.status_code == 201:
+        print(ui.ok + '[+] Posted!' + ui.e)
+    elif res.status_code == 400:
+        print(f'{ui.f}[-] 400 Client error.{ui.e}')
     elif res.status_code == 404:
         print(f'{ui.f}[-] 404 Not found.{ui.e}')
+    elif res.status_code == 405:
+        print(f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}')
+    elif res.status_code == 415:
+        print(f'{ui.f}[-] 415 Unsupported format.{ui.e}')
 except ConnectionError:
     print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
 except JSONDecodeError:
