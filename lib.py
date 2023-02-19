@@ -15,10 +15,7 @@ ui = UI
 
 
 class ArgumentParser:
-    def __init__(self, version) -> None:
-        self.version = version
-
-    def arg_parser():
+    def arg_parser(self):
         parser = argparse.ArgumentParser(
             prog="rac",
             description="RESTful API Client.",
@@ -32,31 +29,35 @@ class ArgumentParser:
                             help='(optional) data that want to be passed in json format', metavar='JSON')
         parser.add_argument('--data-file',
                             help='(optional) data as a json file', metavar='FILE')
-        # FIXME
-        # parser.add_argument('--version', help="shows the version number",
-        #                     action="version", version='%(prog)s v{version}'.format(version=version))
+        parser.add_argument('--version', help="shows the version number",
+                            action="version", version='%(prog)s v{version}'.format(version=self.version))
         args = parser.parse_args()
         return args
 
-    args = arg_parser()
-    if args.url is None:
-        print(f'{ui.f}[!] --url is required{ui.e}')
-        exit(1)
-    is_https = 's' if args.https is True else ''
-    match str(args.method).lower():
-        case 'get':
-            method = 'get'
-        case 'post':
-            method = 'post'
-        case default:
-            print(
-                f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}')
-            method = 'get'
-    try:
-        data = json.dumps(args.data) if args.data is not None else json.loads(
-            open(args.data_file, 'r').read())
-    except:
-        data = None
+    def __init__(self, version) -> None:
+        self.version = version
+        self.args = self.arg_parser()
+        self.is_https = 's' if self.args.https is True else ''
+
+        if self.args.url is None:
+            print(f'{ui.f}[!] --url is required{ui.e}')
+            exit(1)
+
+        match str(self.args.method).lower():
+            case 'get':
+                self.method = 'get'
+            case 'post':
+                self.method = 'post'
+            case default:
+                print(
+                    f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}')
+                self.method = 'get'
+
+        try:
+            self.data = json.dumps(self.args.data) if self.args.data is not None else json.loads(
+                open(self.args.data_file, 'r').read())
+        except:
+            self.data = None
 
 
 class Request:
@@ -74,14 +75,20 @@ class Request:
             print(ui.ok + '[+] Connected.' + ui.e)
             print(self.res.json())
             print(f'{ui.ok}[+] JSON Data Found.{ui.e}')
+            exit(0)
         elif self.res.status_code == 201:
             print(ui.ok + '[+] Posted!' + ui.e)
+            exit(0)
         elif self.res.status_code == 400:
             print(f'{ui.f}[-] 400 Client error.{ui.e}')
+            exit(1)
         elif self.res.status_code == 404:
             print(f'{ui.f}[-] 404 Not found.{ui.e}')
+            exit(1)
         elif self.res.status_code == 405:
             print(
                 f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}')
+            exit(1)
         elif self.res.status_code == 415:
             print(f'{ui.f}[-] 415 Unsupported format.{ui.e}')
+            exit(1)
