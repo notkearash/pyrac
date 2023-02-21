@@ -68,6 +68,11 @@ class Request:
         self.endpoint = endpoint
         self.argparser = argparser
 
+    @staticmethod
+    def eprint(msg, exit_code=0, end="\n"):
+        print(msg, end=end)
+        exit(exit_code)
+
     def request(self):
         print(f'[ {self.argparser.method.upper()} ]', self.endpoint)
         match self.argparser.method:
@@ -80,24 +85,25 @@ class Request:
             case 'options':
                 self.res = requests.options(self.endpoint)
 
-        if self.res.status_code == 200:
-            print(ui.ok + '[+] Connected.' + ui.e)
-            print(self.res.json())
-            print(f'{ui.ok}[+] JSON Data Found.{ui.e}')
-            exit(0)
-        elif self.res.status_code == 201:
-            print(ui.ok + '[+] Posted!' + ui.e)
-            exit(0)
-        elif self.res.status_code == 400:
-            print(f'{ui.f}[-] 400 Client error.{ui.e}')
-            exit(1)
-        elif self.res.status_code == 404:
-            print(f'{ui.f}[-] 404 Not found.{ui.e}')
-            exit(1)
-        elif self.res.status_code == 405:
-            print(
-                f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}')
-            exit(1)
-        elif self.res.status_code == 415:
-            print(f'{ui.f}[-] 415 Unsupported format.{ui.e}')
-            exit(1)
+    def response_handler(self):
+        match self.res.status_code:
+            case 200:
+                print(ui.ok + '[+] Connected.' + ui.e)
+                print(self.res.json())
+                self.eprint(f'{ui.ok}[+] JSON Data Found.{ui.e}')
+            case 201:
+                self.eprint(ui.ok + '[+] Posted!' + ui.e)
+            case 400:
+                self.eprint(f'{ui.f}[-] 400 Client error.{ui.e}', 1)
+            case 404:
+                self.eprint(f'{ui.f}[-] 404 Not found.{ui.e}', 1)
+            case 405:
+                self.eprint(
+                    f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}', 1
+                )
+            case 415:
+                self.eprint(f'{ui.f}[-] 415 Unsupported format.{ui.e}', 1)
+
+    def run(self):
+        self.request()
+        self.response_handler()

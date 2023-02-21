@@ -14,7 +14,7 @@ rq = lib.Request(endpoint, argparser)
 
 if __name__ == '__main__':
     try:
-        rq.request()
+        rq.run()
     except ConnectionError:
         print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
     except JSONDecodeError:
