@@ -24,7 +24,7 @@ class ArgumentParser:
         parser.add_argument('--https',
                             help='(optional) sets your connection to https', action='store_true')
         parser.add_argument('-m', '--method',
-                            help='(optional) sets your connection method. [GET, POST]')
+                            help='(optional) sets your connection method. [GET, POST, OPTIONS]')
         parser.add_argument('-d', '--data',
                             help='(optional) data that want to be passed in json format', metavar='JSON')
         parser.add_argument('--data-file',
@@ -48,6 +48,8 @@ class ArgumentParser:
                 self.method = 'get'
             case 'post':
                 self.method = 'post'
+            case 'options':
+                self.method = 'options'
             case default:
                 print(
                     f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}')
@@ -68,9 +70,16 @@ class Request:
 
     def request(self):
         print(f'[ {self.argparser.method.upper()} ]', self.endpoint)
-        self.res = requests.get(self.endpoint) if self.argparser.method == 'get' else requests.post(
-            self.endpoint, data=self.argparser.data
-        )
+        match self.argparser.method:
+            case 'get':
+                self.res = requests.get(self.endpoint)
+            case 'post':
+                self.res = requests.post(
+                    self.endpoint, data=self.argparser.data
+                )
+            case 'options':
+                self.res = requests.options(self.endpoint)
+
         if self.res.status_code == 200:
             print(ui.ok + '[+] Connected.' + ui.e)
             print(self.res.json())
