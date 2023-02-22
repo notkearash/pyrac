@@ -20,15 +20,17 @@ class ArgumentParser:
             prog="rac",
             description="RESTful API Client.",
         )
-        parser.add_argument('-u', '--url', help="url of endpoint")
+        parser.add_argument('-u', '--url', help="(required) url of endpoint")
         parser.add_argument('--https',
-                            help='(optional) sets your connection to https', action='store_true')
+                            help='sets your connection to https', action='store_true')
         parser.add_argument('-m', '--method',
-                            help='(optional) sets your connection method. [GET, POST, OPTIONS]')
+                            help='sets your connection method. [GET, POST, OPTIONS]')
         parser.add_argument('-d', '--data',
-                            help='(optional) data that want to be passed in json format', metavar='JSON')
+                            help='data that want to be passed in json format', metavar='JSON')
         parser.add_argument('--data-file',
-                            help='(optional) data as a json file', metavar='FILE')
+                            help='data as a json file', metavar='FILE')
+        parser.add_argument('-r', '--allow-redirects',
+                            help="allows redirects", action="store_true")
         parser.add_argument('--version', help="shows the version number",
                             action="version", version='%(prog)s v{version}'.format(version=self.version))
         args = parser.parse_args()
@@ -52,7 +54,8 @@ class ArgumentParser:
                 self.method = 'options'
             case default:
                 print(
-                    f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}')
+                    f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}'
+                )
                 self.method = 'get'
 
         try:
@@ -77,13 +80,21 @@ class Request:
         print(f'[ {self.argparser.method.upper()} ]', self.endpoint)
         match self.argparser.method:
             case 'get':
-                self.res = requests.get(self.endpoint)
+                self.res = requests.get(
+                    self.endpoint,
+                    allow_redirects=self.argparser.args.allow_redirects
+                )
             case 'post':
                 self.res = requests.post(
-                    self.endpoint, data=self.argparser.data
+                    self.endpoint,
+                    data=self.argparser.data,
+                    allow_redirects=self.argparser.args.allow_redirects
                 )
             case 'options':
-                self.res = requests.options(self.endpoint)
+                self.res = requests.options(
+                    self.endpoint,
+                    allow_redirects=self.argparser.args.allow_redirects
+                )
 
     def response_handler(self):
         match self.res.status_code:
@@ -93,6 +104,12 @@ class Request:
                 self.eprint(f'{ui.ok}[+] JSON Data Found.{ui.e}')
             case 201:
                 self.eprint(ui.ok + '[+] Posted!' + ui.e)
+            case 302:
+                self.eprint(
+                    ui.w + "[!] 302 Temporarily moved to: " +
+                    self.endpoint + self.res.headers['Location'] +
+                    f"\n[!] Use {ui.f}-r{ui.e}{ui.w} to allow redirects" + ui.e
+                )
             case 400:
                 self.eprint(f'{ui.f}[-] 400 Client error.{ui.e}', 1)
             case 404:

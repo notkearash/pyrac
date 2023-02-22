@@ -16,17 +16,22 @@ That's it!
 
 ## Help message
 ```
-usage: rac [-h] [-u URL] [-p PORT] [--https] [-m METHOD] [--version]
+$ ./rac.py -h               
+usage: rac [-h] [-u URL] [--https] [-m METHOD] [-d JSON] [--data-file FILE] [-r]
+           [--version]
 
 RESTful API Client.
 
 options:
   -h, --help            show this help message and exit
-  -u URL, --url URL     url of endpoint
-  -p PORT, --port PORT  (optional) port of endpoint
-  --https               (optional) sets your connection to https
+  -u URL, --url URL     (required) url of endpoint
+  --https               sets your connection to https
   -m METHOD, --method METHOD
-                        (optional) sets your connection method. [GET, POST]
+                        sets your connection method. [GET, POST, OPTIONS]
+  -d JSON, --data JSON  data that want to be passed in json format
+  --data-file FILE      data as a json file
+  -r, --allow-redirects
+                        allows redirects
   --version             shows the version number
 ```
 ## Examples
