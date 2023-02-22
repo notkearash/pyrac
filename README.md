@@ -36,13 +36,12 @@ options:
 ```
 ## Examples
 ```
-python3 rac.py -u localhost -p 3000
+python3 rac.py -u localhost:8000/
 ```
 
 ## Notes
 + Dirty and quick project
 + But still usable
-+ ~~maybe ill work on it~~
 
 ## License
 Licensed by MIT
