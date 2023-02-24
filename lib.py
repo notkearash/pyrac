@@ -31,6 +31,8 @@ class ArgumentParser:
                             help='data as a json file', metavar='FILE')
         parser.add_argument('-r', '--allow-redirects',
                             help="allows redirects", action="store_true")
+        parser.add_argument('--force-show-response',
+                            help="shows response anyways", action="store_true")
         parser.add_argument('--version', help="shows the version number",
                             action="version", version='%(prog)s v{version}'.format(version=self.version))
         args = parser.parse_args()
@@ -113,7 +115,9 @@ class Request:
                     f"\n[!] Use {ui.f}-r{ui.e}{ui.w} to allow redirects" + ui.e
                 )
             case 304:
-                self.eprint(ui.w + '[!] 304 Not modified. No need to retransmit.' + ui.e)
+                self.eprint(
+                    ui.w + '[!] 304 Not modified. No need to retransmit.' + ui.e
+                )
             case 400:
                 self.eprint(f'{ui.f}[-] 400 Client error.{ui.e}', 1)
             case 403:
@@ -129,10 +133,17 @@ class Request:
             case 415:
                 self.eprint(f'{ui.f}[-] 415 Unsupported format.{ui.e}', 1)
             case 418:
-                self.eprint(ui.b + '[???] 418 You are connected to a...teapot?!' + ui.e, 1)
+                self.eprint(
+                    ui.b + '[???] 418 You are connected to a...teapot?!' + ui.e, 1
+                )
             case 429:
                 self.eprint(ui.f + '[-] 429 Too many requests.' + ui.e, 1)
 
     def run(self):
         self.request()
+        if self.argparser.args.force_show_response:
+            print(ui.w + '[!] FORCE SHOW RESPONSE ENABLED' + ui.e)
+            print('====RESPONSE====')
+            print(self.res.text)
+            print('====END-RESP====')
         self.response_handler()
