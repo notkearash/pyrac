@@ -104,22 +104,34 @@ class Request:
                 self.eprint(f'{ui.ok}[+] JSON Data Found.{ui.e}')
             case 201:
                 self.eprint(ui.ok + '[+] Posted!' + ui.e)
+            case 204:
+                self.eprint(ui.ok + '[+] 204 No Content.' + ui.e)
             case 302:
                 self.eprint(
                     ui.w + "[!] 302 Temporarily moved to: " +
                     self.endpoint + self.res.headers['Location'] +
                     f"\n[!] Use {ui.f}-r{ui.e}{ui.w} to allow redirects" + ui.e
                 )
+            case 304:
+                self.eprint(ui.w + '[!] 304 Not modified. No need to retransmit.' + ui.e)
             case 400:
                 self.eprint(f'{ui.f}[-] 400 Client error.{ui.e}', 1)
+            case 403:
+                self.eprint(ui.f + '[-] 403 Forbidden.' + ui.e)
             case 404:
                 self.eprint(f'{ui.f}[-] 404 Not found.{ui.e}', 1)
             case 405:
                 self.eprint(
                     f'{ui.f}[-] 405 Method is not allowed on this endpoint.{ui.e}', 1
                 )
+            case 413:
+                self.eprint(ui.f + '[-] 413 Content Too Large' + ui.e, 1)
             case 415:
                 self.eprint(f'{ui.f}[-] 415 Unsupported format.{ui.e}', 1)
+            case 418:
+                self.eprint(ui.b + '[???] 418 You are connected to a...teapot?!' + ui.e, 1)
+            case 429:
+                self.eprint(ui.f + '[-] 429 Too many requests.' + ui.e, 1)
 
     def run(self):
         self.request()
