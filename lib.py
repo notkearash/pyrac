@@ -141,7 +141,7 @@ class Request:
 
     def run(self):
         self.request()
-        if self.argparser.args.force_show_response:
+        if self.argparser.args.force_show_response and self.res.status_code != 200:
             print(ui.w + '[!] FORCE SHOW RESPONSE ENABLED' + ui.e)
             print('====RESPONSE====')
             print(self.res.text)
