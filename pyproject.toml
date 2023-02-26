@@ -22,4 +22,4 @@ classifiers = [
 build = ["build", "twine"]
 
 [project.scripts]
-notkearash = "pyrac.__main__:main"
+pyrac = "pyrac.__main__:main"

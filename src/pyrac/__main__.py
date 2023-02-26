@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-if __name__ == '__main__':
+def main():
     try:
         from rac import main
         main()
@@ -9,3 +9,8 @@ if __name__ == '__main__':
     except ModuleNotFoundError:
         print('\033[91msome modules not found')
         print('try: pip install requests\033[0m')
+
+
+if __name__ == '__main__':
+    main()
+
