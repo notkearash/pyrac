@@ -1,7 +1,7 @@
+![pyrac](./pyrac.png)
 # Python RESTful API Client
 ## Installation
 First make sure you have python 3.10 installed on your system.
-
 ```
 $ python --version
 Python 3.10.x

@@ -1,9 +1,2 @@
-#!/usr/bin/env python3
-from rac import main
-
-if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        print('Interrupted...')
-        exit(1)
+#!/bin/sh
+python3 src/pyrac $@ 

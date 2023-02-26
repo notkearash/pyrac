@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "requests"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "pyrac"
+version = "0.1.0"
+authors = [
+  { name="Kearash", email="hi@kearash.io" },
+]
+description = "Python RESTful API Client"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+[project.urls]
+"Homepage" = "https://github.com/notkearash/pyrac"
+"Bug Tracker" = "https://github.com/notkearash/pyrac/issues"
+[project.optional-dependencies]
+build = ["build", "twine"]
+
+[project.scripts]
+notkearash = "pyrac.__main__:main"
