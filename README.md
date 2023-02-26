@@ -1,5 +1,4 @@
-# RESTful API Client
----
+# Python RESTful API Client
 ## Installation
 First make sure you have python 3.10 installed on your system.
 
@@ -16,11 +15,11 @@ That's it!
 
 ## Help message
 ```
-$ ./rac.py -h               
-usage: rac [-h] [-u URL] [--https] [-m METHOD] [-d JSON] [--data-file FILE] [-r]
-           [--version]
+$ ./pyrac -h
+usage: pyrac [-h] [-u URL] [--https] [-m METHOD] [-d JSON] [--data-file FILE] [-r]
+             [--force-show-response] [--version]
 
-RESTful API Client.
+Python RESTful API Client.
 
 options:
   -h, --help            show this help message and exit
@@ -32,16 +31,13 @@ options:
   --data-file FILE      data as a json file
   -r, --allow-redirects
                         allows redirects
+  --force-show-response
+                        shows response anyways
   --version             shows the version number
 ```
 ## Examples
 ```
-python3 rac.py -u localhost:8000/
+./pyrac -u jsonplaceholder.typicode.com/posts -m get --https
 ```
-
-## Notes
-+ Dirty and quick project
-+ But still usable
-
 ## License
 Licensed by MIT

@@ -17,8 +17,8 @@ ui = UI
 class ArgumentParser:
     def arg_parser(self):
         parser = argparse.ArgumentParser(
-            prog="rac",
-            description="RESTful API Client.",
+            prog="pyrac",
+            description="Python RESTful API Client.",
         )
         parser.add_argument('-u', '--url', help="(required) url of endpoint")
         parser.add_argument('--https',
