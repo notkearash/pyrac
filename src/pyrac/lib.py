@@ -26,16 +26,18 @@ class ArgumentParser:
             description="Python RESTful API Client.",
         )
         parser.add_argument('-u', '--url', help="(required) url of endpoint")
-        parser.add_argument('--https',
+        parser.add_argument('-H', '--https',
                             help='sets your connection to https', action='store_true')
         parser.add_argument('-m', '--method',
                             help='sets your connection method. [GET, POST, OPTIONS]')
         parser.add_argument('-d', '--data',
                             help='data that want to be passed in json format', metavar='JSON')
-        parser.add_argument('--data-file',
-                            help='data as a json file', metavar='FILE')
         parser.add_argument('-r', '--allow-redirects',
                             help="allows redirects", action="store_true")
+        parser.add_argument('-q', '--quiet',
+                            help='quiet output (no messages)', action='store_true')
+        parser.add_argument('--data-file',
+                            help='data as a json file', metavar='FILE')
         parser.add_argument('--force-show-response',
                             help="shows response anyways", action="store_true")
         parser.add_argument('--version', help="shows the version number",
@@ -78,13 +80,16 @@ class Request:
         self.endpoint = endpoint
         self.argparser = argparser
 
-    @staticmethod
-    def eprint(msg, exit_code=0, end="\n"):
-        print(msg, end=end)
+    def qprint(self, msg, end="\n"):
+        if self.argparser.args.quiet is not True:
+            print(msg, end=end)
+
+    def eprint(self, msg, exit_code=0, end="\n"):
+        self.qprint(msg, end)
         exit(exit_code)
 
     def request(self):
-        print(f'[ {self.argparser.method.upper()} ]', self.endpoint)
+        self.qprint(f'[ {self.argparser.method.upper()} ]', self.endpoint)
         match self.argparser.method:
             case 'get':
                 self.res = requests.get(
@@ -106,7 +111,7 @@ class Request:
     def response_handler(self):
         match self.res.status_code:
             case 200:
-                print(ui.ok + '[+] Connected.' + ui.e)
+                self.qprint(ui.ok + '[+] Connected.' + ui.e)
                 print(self.res.json())
                 self.eprint(f'{ui.ok}[+] JSON Data Found.{ui.e}')
             case 201:
@@ -147,7 +152,7 @@ class Request:
     def run(self):
         self.request()
         if self.argparser.args.force_show_response and self.res.status_code != 200:
-            print(ui.w + '[!] FORCE SHOW RESPONSE ENABLED' + ui.e)
+            self.qprint(ui.w + '[!] FORCE SHOW RESPONSE ENABLED' + ui.e)
             print('====RESPONSE====')
             print(self.res.text)
             print('====END-RESP====')
