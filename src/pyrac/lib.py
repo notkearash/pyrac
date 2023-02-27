@@ -17,11 +17,11 @@ ui = UI
 class ArgumentParser:
     def arg_parser(self):
         parser = argparse.ArgumentParser(
-            prog="""\033[94m
+            prog=f"""\033[94m
  ____  _  _  ____   __    ___   
 (  _ \( \/ )(  _ \ / _\  / __)  
  ) __/ )  /  )   //    \( (__   
-(__)  (__/  (__\_)\_/\_/ \___)v0.1\033[0m
+(__)  (__/  (__\_)\_/\_/ \___)v{self.version}\033[0m
             """,
             description="Python RESTful API Client.",
         )
@@ -41,7 +41,7 @@ class ArgumentParser:
         parser.add_argument('--force-show-response',
                             help="shows response anyways", action="store_true")
         parser.add_argument('--version', help="shows the version number",
-                            action="version", version='%(prog)s v{version}'.format(version=self.version))
+                            action="version", version='pyrac v{0}'.format(self.version))
         args = parser.parse_args()
         return args
 
@@ -62,9 +62,6 @@ class ArgumentParser:
             case 'options':
                 self.method = 'options'
             case default:
-                print(
-                    f'{ui.w}[!] Setting METHOD to default (GET).{ui.e}'
-                )
                 self.method = 'get'
 
         try:

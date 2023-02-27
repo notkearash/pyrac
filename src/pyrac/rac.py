@@ -16,4 +16,4 @@ def main():
         print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
     except JSONDecodeError:
         print(rq.res.text)
-        print(f'{ui.w}[!] JSON Decode failed, raw response printed.{ui.e}')
+        rq.qprint(f'{ui.w}[!] JSON Decode failed, raw response printed.{ui.e}')
