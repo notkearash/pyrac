@@ -86,7 +86,7 @@ class Request:
         exit(exit_code)
 
     def request(self):
-        self.qprint(f'[ {self.argparser.method.upper()} ]', self.endpoint)
+        self.qprint(f'[ {self.argparser.method.upper()} ] {self.endpoint}')
         match self.argparser.method:
             case 'get':
                 self.res = requests.get(
@@ -115,6 +115,12 @@ class Request:
                 self.eprint(ui.ok + '[+] Posted!' + ui.e)
             case 204:
                 self.eprint(ui.ok + '[+] 204 No Content.' + ui.e)
+            case 301:
+                self.eprint(
+                    ui.w + "[!] 302 Permanently moved to: " +
+                    self.endpoint + self.res.headers['Location'] +
+                    f"\n[!] Use {ui.f}-r{ui.e}{ui.w} to allow redirects" + ui.e
+                )
             case 302:
                 self.eprint(
                     ui.w + "[!] 302 Temporarily moved to: " +
@@ -137,6 +143,8 @@ class Request:
                 )
             case 413:
                 self.eprint(ui.f + '[-] 413 Content Too Large' + ui.e, 1)
+            case 413:
+                self.eprint(ui.f + '[-] 414 URI Too Long' + ui.e, 1)
             case 415:
                 self.eprint(f'{ui.f}[-] 415 Unsupported format.{ui.e}', 1)
             case 418:
