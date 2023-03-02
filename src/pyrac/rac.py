@@ -3,7 +3,7 @@ import lib
 from requests.exceptions import ConnectionError
 from json.decoder import JSONDecodeError
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 def main():
     try:

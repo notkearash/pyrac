@@ -16,21 +16,27 @@ That's it!
 ## Help message
 ```
 $ ./pyrac -h
-usage: pyrac [-h] [-u URL] [--https] [-m METHOD] [-d JSON] [--data-file FILE] [-r]
-             [--force-show-response] [--version]
+ ____  _  _  ____   __    ___   
+(  _ \( \/ )(  _ \ / _\  / __)  
+ ) __/ )  /  )   //    \( (__   
+(__)  (__/  (__\_)\_/\_/ \___)v0.2.0
+            
+       [-h] [-u URL] [-H] [-m METHOD] [-d JSON] [-r] [-q] [--data-file FILE]
+       [--force-show-response] [--version]
 
 Python RESTful API Client.
 
 options:
   -h, --help            show this help message and exit
   -u URL, --url URL     (required) url of endpoint
-  --https               sets your connection to https
+  -H, --https           sets your connection to https
   -m METHOD, --method METHOD
                         sets your connection method. [GET, POST, OPTIONS]
   -d JSON, --data JSON  data that want to be passed in json format
-  --data-file FILE      data as a json file
   -r, --allow-redirects
                         allows redirects
+  -q, --quiet           quiet output (no messages)
+  --data-file FILE      data as a json file
   --force-show-response
                         shows response anyways
   --version             shows the version number
