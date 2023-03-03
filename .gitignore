@@ -4,3 +4,4 @@ venv*
 *txt
 dist*
 src/pyrac.egg-info*
+**/.idea/*

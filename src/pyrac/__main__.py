@@ -1,16 +1,23 @@
-#!/usr/bin/env python3
+from lib import lib
+
+from requests.exceptions import ConnectionError
+from json.decoder import JSONDecodeError
+
+__version__ = '0.2.0'
+
+
 def main():
     try:
-        from rac import main
-        main()
-    except KeyboardInterrupt:
-        print('Interrupted...')
-        exit(1)
-    except ModuleNotFoundError:
-        print('\033[91msome modules not found')
-        print('try: pip install requests\033[0m')
-
+        argparser = lib.ArgumentParser(__version__)
+        ui = lib.UI()
+        endpoint = f'http{argparser.is_https}://{argparser.args.url}'
+        rq = lib.Request(endpoint, argparser)
+        rq.run()
+    except ConnectionError:
+        print(f'{ui.f}[-] There was an error to connect to the endpoint.{ui.e}')
+    except JSONDecodeError:
+        print(rq.res.text)
+        rq.qprint(f'{ui.w}[!] JSON Decode failed, raw response printed.{ui.e}')
 
 if __name__ == '__main__':
     main()
-
